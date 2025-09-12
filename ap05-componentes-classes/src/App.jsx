@@ -1,4 +1,5 @@
 import React from 'react'
+import Lontra from './Lontra'
 class App extends React.Component {
 
   constructor(props) {
@@ -8,13 +9,14 @@ class App extends React.Component {
       longitude: null,
       estacao: null,
       data: null,
-      icone: null
+      icone: null,
+      mesagemDeErro: null
     }
   }
-    icones = {
-    'Primavera' : 'sun-plant-wilt',
+  icones = {
+    'Primavera': 'sun-plant-wilt',
     'Verão': 'sun',
-    'Outono' : 'leaf',
+    'Outono': 'leaf',
     'Inverno': 'snowflake'
   }
   obterEstacao = (latitude, data) => {
@@ -33,12 +35,12 @@ class App extends React.Component {
     if (data >= d2 && data < d3)
       return estaNoSul ? 'Primavera' : 'Outono'
     if (data >= d3 || data < d4)
-    return estaNoSul ? 'Verão' : 'Inverno'
+      return estaNoSul ? 'Verão' : 'Inverno'
 
     return estaNoSul ? 'Outono' : 'Primavera'
   }
 
-  obterLocalizacao = () => { 
+  obterLocalizacao = () => {
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
         const dataAtual = new Date()
@@ -49,28 +51,70 @@ class App extends React.Component {
         const icone = this.icones[estacao]
         //this.state.icone = icone
         this.setState({
-          icone: icone
+          icone: icone,
+          estacao: estacao,
+          data: dataAtual,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
         })
       },
       (err) => {
         console.log(`Erro: ${err}`)
+        this.setState({
+          mensagemDeErro: 'Tente novamente mais tarde.'
+        })
       }
 
     )
 
   }
-  componentDidMount(){
-    this.obterLocalizacao()
-  }
+  // componentDidMount() {
+  //   this.obterLocalizacao()
+  // }
 
+  //agora a lontra tem um parceiro
+  //mais ainda cada lontra é produzido por um componente Reacr chamado Lontra
   render() {
     return (
-      <div>
-        <div>
-          <div><i class="fa-solid fa-otter"></i></div>
-          <div className={`fa-solid fa-${this.state.icone}`}></div>
+      <div className='container mt-2 '>
+        <div className="row">
+          <div className="col-12">
+            <Lontra tamanho="fa-3x" />
+            <Lontra tamanho="fa-3x" />
+          </div>
         </div>
+        <div className='row'>
+          <div className="col-sm-12">
+            <div className="card">
+              <div className="card-body">
+                <div
+                  className=" d-flex align-items-center border rounded mb-2"
+                  style={{ height: '6rem' }}>
+                  <i className={`fa-solid fa-4x fa-${this.state.icone} `}></i>
+                  <p className="ms-2 w-75 text-center fs-1"> {this.state.estacao}</p>
+                </div>
 
+                <div>
+                  <p className="text-center">
+                    {/* {rederização condicional} */}
+                    {
+                      this.state.latitude ?
+                      `Coordenadas ${this.state.latitude}, ${this.state.longitude},
+                      Data: ${this.state.data.toLocaleString()}`:
+                      this.state.mesagemDeErro ? `${this.state.mensagemDeErro}`:
+                      `Precisa liberar o acesso à localização`
+                    }
+                  </p>
+                </div>
+                <button 
+                className='btn btn-outline-primary w-100 mt-2'
+                onClick={this.obterLocalizacao}>
+                  Qual a minha estação
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
