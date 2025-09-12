@@ -1,17 +1,30 @@
 import React from 'react'
 import Lontra from './Lontra'
+import EstacaoClimatica from './EstacaoClimatica'
+import Loading from './Loading'
+
 class App extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      latitude: null,
-      longitude: null,
-      estacao: null,
-      data: null,
-      icone: null,
-      mesagemDeErro: null
-    }
+    // this.state = {
+    //   latitude: null,
+    //   longitude: null,
+    //   estacao: null,
+    //   data: null,
+    //   icone: null,
+    //   mesagemDeErro: null
+    // }
+    console.log('constructor')
+  }
+
+  state = {
+    latitude: null,
+    longitude: null,
+    estacao: null,
+    icone: null,
+    data: null,
+    mensagemDeErro: null,
   }
   icones = {
     'Primavera': 'sun-plant-wilt',
@@ -68,13 +81,19 @@ class App extends React.Component {
     )
 
   }
-  // componentDidMount() {
-  //   this.obterLocalizacao()
-  // }
 
-  //agora a lontra tem um parceiro
-  //mais ainda cada lontra é produzido por um componente Reacr chamado Lontra
+  componentDidMount() {
+    console.log('componentDidMount')
+    // this.obterLocalizacao()
+  }
+  componentDidUpdate() {
+    console.log('componentDidUpdate')
+  }
+  componentWillUnmount() {
+    console.log(' componentWillUnmount')
+  }
   render() {
+    console.log('render')
     return (
       <div className='container mt-2 '>
         <div className="row">
@@ -85,34 +104,27 @@ class App extends React.Component {
         </div>
         <div className='row'>
           <div className="col-sm-12">
-            <div className="card">
-              <div className="card-body">
-                <div
-                  className=" d-flex align-items-center border rounded mb-2"
-                  style={{ height: '6rem' }}>
-                  <i className={`fa-solid fa-4x fa-${this.state.icone} `}></i>
-                  <p className="ms-2 w-75 text-center fs-1"> {this.state.estacao}</p>
-                </div>
+            {
+              (!this.state.latitude && !this.state.mensagemDeErro) ?
+              <Loading />
+              
+              :
+              this.state.mensagemDeErro ? 
+              <p className="border rounded p-2 fs-1 text-center">
+                é preciso dar permissão para acesso à localização. Atualize a página
+              </p>
 
-                <div>
-                  <p className="text-center">
-                    {/* {rederização condicional} */}
-                    {
-                      this.state.latitude ?
-                      `Coordenadas ${this.state.latitude}, ${this.state.longitude},
-                      Data: ${this.state.data.toLocaleString()}`:
-                      this.state.mesagemDeErro ? `${this.state.mensagemDeErro}`:
-                      `Precisa liberar o acesso à localização`
-                    }
-                  </p>
-                </div>
-                <button 
-                className='btn btn-outline-primary w-100 mt-2'
-                onClick={this.obterLocalizacao}>
-                  Qual a minha estação
-                </button>
-              </div>
-            </div>
+              :
+            <EstacaoClimatica           
+            estacao = {this.state.estacao}
+            icone= {this.state.icone}
+            latitude= {this.state.latitude}
+            longitude= {this.state.longitude}
+            data= {this.state.data}
+            mensagemDeErro = {this.state.mensagemDeErro} 
+            obterLocalizacao= {this.obterLocalizacao} />
+            }
+              
           </div>
         </div>
       </div>
