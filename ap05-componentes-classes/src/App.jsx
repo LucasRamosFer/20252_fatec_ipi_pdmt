@@ -84,7 +84,7 @@ class App extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount')
-    // this.obterLocalizacao()
+    this.obterLocalizacao()
   }
   componentDidUpdate() {
     console.log('componentDidUpdate')
@@ -106,7 +106,7 @@ class App extends React.Component {
           <div className="col-sm-12">
             {
               (!this.state.latitude && !this.state.mensagemDeErro) ?
-              <Loading />
+              <Loading texto= 'Por favor, dê acesso à localização' />
               
               :
               this.state.mensagemDeErro ? 

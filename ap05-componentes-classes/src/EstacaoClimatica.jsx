@@ -33,7 +33,7 @@ export class EstacaoClimatica extends Component {
                             {/* {rederização condicional} */}
                             {
                                 this.props.latitude ?
-                                    `Coordenadas ${this.props.latitude}, ${this.props.longitude}, Data: ${this.state.data.toLocaleString()}` :
+                                    `Coordenadas ${this.props.latitude}, ${this.props.longitude}, Data: ${this.state.data}` :
                                     this.props.mesagemDeErro ? `${this.props.mensagemDeErro}` :
                                         `Precisa liberar o acesso à localização`
                             }
